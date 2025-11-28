@@ -29,6 +29,8 @@ module.exports = function (app) {
         return res.json({ error: 'required field(s) missing' });
       }
 
+      const now = new Date().toISOString();
+
       const newIssue = {
         _id: Date.now().toString() + Math.random().toString(36).substring(2, 5),
         project: project,
@@ -37,8 +39,8 @@ module.exports = function (app) {
         created_by,
         assigned_to: assigned_to || '',
         status_text: status_text || '',
-        created_on: new Date().toISOString(),
-        updated_on: new Date().toISOString(),
+        created_on: now,
+        updated_on: now,
         open: true
       };
       issues.push(newIssue);
@@ -86,10 +88,10 @@ module.exports = function (app) {
 
       const index = issues.findIndex(i => i._id === _id);
       if (index === -1) {
-        return res.json({ error: 'could not delete issue' });
+        return res.json({ error: 'could not delete issue', _id });
       }
 
       issues.splice(index, 1);
-      res.json({ result: 'issue successfully deleted' });
+      res.json({ result: 'issue successfully deleted', _id });
     });
 };
